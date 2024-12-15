@@ -15,7 +15,7 @@ An app that facilitates and helps decision making.
 ## Data Collection Workflow
 - name 
 - decision to make
-- options (2-3)
+- options (2-4)
 - choose mode
     | Logic Mode | Random Mode | Intuition Mode |
     - Logic Mode
