@@ -17,6 +17,7 @@ while True:
         print("Sorry I didn't get you. Please enter a valid number.")
 
 option_inputs = []
+options_data = []
 for i in range(option_nums):
     while True:
         option_input = input(f"Enter your option {i+1}: ")
@@ -24,11 +25,14 @@ for i in range(option_nums):
             print("Sorry you missed it. Please try again.")
         else:
             option_inputs.append(option_input)
+            options_data.append({f"option{i+1}":option_input})
             break
+
 
 print("\nYou entered the following options: ")
 for index, option in enumerate(option_inputs):
     print(f"{index+1}. {option}")
+
 
 # select mode
 while True:
@@ -87,9 +91,23 @@ if mode == "#1 - Logic Mode":
 
     final_total_weight = pros_total_weights - cons_total_weights
 
+    # save data to a json file
+    decision_data = {
+        "name": name,
+        "decision": decision,
+        "options":options_dict,
 
+        "pros": pros_dict,
+        "cons": cons_dict,
+        "pros_total_weights": pros_total_weights,
+        "cons_total_weights": cons_total_weights,
+        "final_weights": final_total_weight
+    }
 
-# save data to a json file
+    save_data(decision_data,'decision_data.json')
+    print("Thanks for your entry.")
 
+    # reporting
+    
         
 
