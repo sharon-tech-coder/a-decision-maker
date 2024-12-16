@@ -3,6 +3,10 @@ from file_operations import load_data, save_data
 # collect data 
 name = input("Welcome to Decision Maker. What's your name? ")
 decision = input(f"Hello {name}, what is the decision you'd like to make today? ")
+decision_data = {
+    "name": name,
+    "decision": decision
+}
 
 # collect options
 while True:
@@ -25,7 +29,6 @@ for i in range(option_nums):
             print("Sorry you missed it. Please try again.")
         else:
             option_inputs.append(option_input)
-            options_data.append({f"option{i+1}":option_input})
             break
 
 
@@ -54,60 +57,65 @@ while True:
 
 # logic mode
 if mode == "#1 - Logic Mode":
-    print("Use your sensible side to sort out what's the best for you. Let's think of a few pros and cons.")
-    pros = input("What are the pros? Please use '|' to separate them: ")
-    cons = input("What are the cons? Please use '|' to separate them: ")
+    print("Use pros and cons to sort out what's the best for you.")
+    
+    for index, option in enumerate(option_inputs):
+        print(f"For option {index+1}. {option} - ")
 
-    pros_list = pros.split('|')
-    cons_list = cons.split('|')
+        pros = input("What are the pros? Please use '|' to separate them: ")
+        cons = input("What are the cons? Please use '|' to separate them: ")
 
-    pros_dict = {}
-    for pro in pros_list:
-        while True:
-            try: 
-                weight = float(input(f"{pro} - How important is it to you? Please assign a weight (1-10) to it: "))
-                if 1<= weight <= 10:
-                    pros_dict[pro] = weight
-                    break
-                else:
-                    print("Please enter a number between 1 and 10.")
-            except ValueError:
-                print("Sorry I didn't get you. Please enter a valid number.")
-    pros_total_weights = sum(pros_dict.values())
+        pros_list = pros.split('|')
+        cons_list = cons.split('|')
 
-    cons_dict = {}
-    for con in cons_list:
-        while True:
-            try:
-                weight = float(input(f"{con} - How bad is it to you? Please assign a weight (1-10) to it: "))
-                if 1<= weight <= 10:
-                    cons_dict[con] = weight
-                    break
-                else:
-                    print("Please enter a number between 1 and 10.")
-            except ValueError:
-                print("Sorry I didn't get you. Please enter a valid number.")
-    cons_total_weights = sum(cons_dict.values())
+        pros_dict = {}
+        for pro in pros_list:
+            while True:
+                try: 
+                    weight = float(input(f"{pro} - How important is it to you? Please assign a weight (1-10) to it: "))
+                    if 1<= weight <= 10:
+                        pros_dict[pro] = weight
+                        break
+                    else:
+                        print("Please enter a number between 1 and 10.")
+                except ValueError:
+                    print("Sorry I didn't get you. Please enter a valid number.")
+        pros_total_weights = sum(pros_dict.values())
 
-    final_total_weight = pros_total_weights - cons_total_weights
+        cons_dict = {}
+        for con in cons_list:
+            while True:
+                try:
+                    weight = float(input(f"{con} - How bad is it to you? Please assign a weight (1-10) to it: "))
+                    if 1<= weight <= 10:
+                        cons_dict[con] = weight
+                        break
+                    else:
+                        print("Please enter a number between 1 and 10.")
+                except ValueError:
+                    print("Sorry I didn't get you. Please enter a valid number.")
+        cons_total_weights = sum(cons_dict.values())
 
+        final_total_weight = pros_total_weights - cons_total_weights
+
+        option_data = {
+            "option": option,
+            "pros": pros_dict,
+            "cons": cons_dict,
+            "final_total_weight": final_total_weight
+        }
+        options_data.append(option_data)
+    
+    # update decision data
+    decision_data["options_data"] = options_data
+    optimal_option = max(options_data,key=lambda x: x[final_total_weight])
+    
     # save data to a json file
-    decision_data = {
-        "name": name,
-        "decision": decision,
-        "options":options_dict,
-
-        "pros": pros_dict,
-        "cons": cons_dict,
-        "pros_total_weights": pros_total_weights,
-        "cons_total_weights": cons_total_weights,
-        "final_weights": final_total_weight
-    }
-
-    save_data(decision_data,'decision_data.json')
     print("Thanks for your entry.")
+    save_data(decision_data,'decision_data.json')
 
     # reporting
+    print(f"Based on pros and cons, it seems that the following option emerges as the most optimal choice:\n{optimal_option['option']}")
     
         
 
