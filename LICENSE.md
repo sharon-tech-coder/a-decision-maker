@@ -16,12 +16,21 @@ Add a NOTICE file if required and include proper attribution for third-party com
 
 ### 2. **six**
 - **License**: [MIT License](https://opensource.org/licenses/MIT)
-- **Description**: six is a Python 2 and 3 compatibility library that allows developers to write code that is compatible with both Python versions. It provides utility functions for handling differences between Python 2 and 3, such as iterators, string handling, and import compatibility.
+- **Description**: The MIT License is a permissive open-source license that allows users to freely use, modify, and distribute the software, including for commercial purposes, with very few restrictions. The only major requirement is that the copyright notice and permission notice must be included in all copies or substantial portions of the software. The software is provided "as is," without any warranties.
 - **License Compliance**:
 - You must include the copyright notice and this permission notice in all copies or substantial portions of the software.
 - You may use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the software, as long as the above notices are preserved.
 - The software is provided "as is," without warranty of any kind, express or implied, including but not limited to warranties of merchantability, fitness for a particular purpose, and non-infringement.
 - The full license text for Anytree can be found [Here](.venv/lib/python3.13/site-packages/six-1.17.0.dist-info/LICENSE)
+
+### 3. **termcolor**
+- **License**: [MIT License](https://opensource.org/licenses/MIT)
+- **Description**: The MIT License is a permissive open-source license that allows users to freely use, modify, and distribute the software, including for commercial purposes, with very few restrictions. The only major requirement is that the copyright notice and permission notice must be included in all copies or substantial portions of the software. The software is provided "as is," without any warranties.
+- **License Compliance**:
+- You must include the copyright notice and this permission notice in all copies or substantial portions of the software.
+- You may use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the software, as long as the above notices are preserved.
+- The software is provided "as is," without warranty of any kind, express or implied, including but not limited to warranties of merchantability, fitness for a particular purpose, and non-infringement.
+- The full license text for Anytree can be found [Here](.venv/lib/python3.13/site-packages/termcolor-2.5.0.dist-info/licenses/COPYING.txt)
 
 ## General License Compliance Information
 
