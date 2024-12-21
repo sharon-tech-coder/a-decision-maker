@@ -1,7 +1,4 @@
-from file_operations import load_data, save_data
-from logic_operations import logic_operator
-from random_operations import random_operator
-from intuition_operations import intuition_operator
+
 
 # collect data 
 name = input("Welcome to Decision Maker. What's your name? ")

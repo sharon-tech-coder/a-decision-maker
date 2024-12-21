@@ -1,10 +1,8 @@
-import random
-
 class Decision:
-    def __init__(self,title,options=None):
+    def __init__(self,title,options=None,options_data=None):
         self.title = title
         self.options = options if options is not None else []
-        self.options_data = []
+        self.options_data = options_data if options_data is not None else []
 
     def collect_options(self):
         while True:
@@ -94,20 +92,4 @@ class Decision:
         else:
             print("No options collected.")
     
-    def random_operator(self):
-        print("Looks like you'd like to try your luck with uncertainty this time.")
-        random_option = random.choice(self.options)
-        while True:
-            accept_random = input("Please enter 'yes' to receive your result: ").strip().lower()
-            if accept_random == 'yes':
-                print(f"Here is your random option: {random_option}")
-                break
-            elif accept_random in ['quit','q'] or accept_random.startswith('q'):
-                print("You chose to quit. Going back now.")
-                break
-            else:
-                print("You must enter the exact word 'yes' to receive your answer, or 'quit' to go back.")
-
-    def intuition_operator(self):
-        pass
-
+    
