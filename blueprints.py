@@ -1,16 +1,8 @@
 import random
 from anytree import Node, RenderTree
-from termcolor import colored, cprint
-
-# font colours
-
-print_on_pros = lambda x: cprint(x, "black","on_light_green")
-print_on_cons = lambda x: cprint(x, "black","on_light_red")
-print_on_warning = lambda x: cprint(x, "light_yellow")
-print_on_highlights = lambda x: cprint(x, "white","on_blue")
-
-
-# class Option
+from font_colours import *
+import json
+import os
 
 class Option:
     def __init__(self,name):
@@ -84,15 +76,14 @@ class Option:
         print_on_cons(f"Cons: {', '.join(self.cons)}")
         print_on_highlights(f"Final Total Weight: {self.final_total_weight}")
 
-
-# class Decision
-
 class Decision:
     def __init__(self,title):
         self.title = title
         self.options = []
         self.options_data = []
-        self.optimal_option = None
+        self.optimal_option = ""
+        self.future_tree = {}
+        self.decision_data = {}
 
     def __str__(self):
         return self.title
@@ -132,20 +123,23 @@ class Decision:
             for index, option in enumerate(self.options):
                 print_on_highlights(f"{index+1}. {option}")
 
-    def logic_operator(self,options_data):
+    def logic_operator(self):
         print("Evaluating your options based on pros and cons.")
         for option in self.options:
             option.add_pros()
             option.add_cons()
             option.calculate_total_weight()
+            option.display_pros_and_cons()
             self.options_data.append({
                 'name': option.name,
+                'pros': option.pros_data,
+                'cons': option.cons_data,
                 'final_total_weight': option.final_total_weight
             })
         self.optimal_option = max(self.options_data, key=lambda x: x["final_total_weight"])
         print_on_highlights(f"\nBased on pros and cons, your optimal option is: {self.optimal_option['name']}")
 
-    def random_operator(self,options):
+    def random_operator(self):
         print("Selecting an option based on pure luck.")
         random_result = random.choice(self.options)
         while True:
@@ -159,38 +153,56 @@ class Decision:
             else:
                 print_on_warning("You must enter the exact word 'yes' to receive your answer, or 'quit' to go back.")
 
-    def intuition_operator(self,options):
+    def intuition_operator(self):
         future = colored("future","light_blue")
         print(f"For the options you entered, imagine a {future} with them...")
         root = Node(f"For {self.title} - the following is what you see in the long term:")
         
         for option in self.options:
             child = Node(f"{option}", parent=root)
-            imagination_2_years = input(f"For option {option}, what do you see in 2 years: ")
-            grandchild_level1 = Node(f"In 2 years: {imagination_2_years}", parent=child)
-            imagination_5_years = input(f"For option {option}, what do you see in 5 years: ")
-            grandchild_level2 = Node(f"In 5 years: {imagination_5_years}", parent=grandchild_level1)
-            imagination_10_years = input(f"For option {option}, what do you see in 10 years: ")
-            grandchild_level3 = Node(f"In 10 years: {imagination_10_years}", parent=grandchild_level2)
+            while True:
+                imagination_2_years = input(f"For option {option}, what do you see in 2 years: ").strip()
+                if imagination_2_years:
+                    grandchild_level1 = Node(f"In 2 years: {imagination_2_years}", parent=child)
+                    self.future_tree["In 2 years"] = imagination_2_years
+                    break
+                else:
+                    print_on_warning("Your imagination can't be empty. Please try again.")
+            while True:
+                imagination_5_years = input(f"For option {option}, what do you see in 5 years: ").strip()
+                if imagination_5_years:
+                    grandchild_level2 = Node(f"In 5 years: {imagination_5_years}", parent=grandchild_level1)
+                    self.future_tree["In 5 years"] = imagination_5_years
+                    break
+                else:
+                    print_on_warning("Your imagination can't be empty. Please try again.")
+            while True:
+                imagination_10_years = input(f"For option {option}, what do you see in 10 years: ").strip()
+                if imagination_10_years:
+                    grandchild_level3 = Node(f"In 10 years: {imagination_10_years}", parent=grandchild_level2)
+                    self.future_tree["In 10 years"] = imagination_10_years
+                    break
+                else:
+                    print_on_warning("Your imagination can't be empty. Please try again.")
 
         for pre, fill, node in RenderTree(root):
-            print(f"\n{pre} {node.name}")
+            print(f"{pre} {node.name}")
 
-        print_on_highlights("Hope that gives you a bit insights.")
+        print_on_successful("Hope that gives you a bit insights.")
 
     def make_decision(self):
         exit_program = False
         while True:
             while True:
-                mode = input(f"\nPlease select a mode - #1 for Logic Mode | #2 for Random Mode | #3 for Intuition Mode: ")
+                mode = input(f"\nPlease select a mode - (1) Logic Mode | (2) for Random Mode | (3) for Intuition Mode: ")
                 if ('1' in mode and ('2' not in mode and '3' not in mode)) or 'logic' in mode.lower():
-                    self.logic_operator(self.options_data)
+                    self.logic_operator()
                     break
                 elif ('2' in mode and ('1' not in mode and '3' not in mode)) or 'random' in mode.lower():
-                    self.random_operator(self.options)
+                    self.random_operator()
                     break
                 elif ('3' in mode and ('1' not in mode and '2' not in mode)) or 'intuition' in mode.lower():
-                    self.intuition_operator(self.options)
+                    self.intuition_operator()
                     break
                 elif mode in ['quit','q'] or mode.startswith('q'):
                     print("You chose to quit. Going back now.")
@@ -207,7 +219,6 @@ class Decision:
                 if (retry in ['yes','y'] or retry.startswith('yes')) and ('n' not in retry):
                     break
                 elif (retry in ['no','n'] or retry.startswith('no')) and ('y' not in retry):
-                    print("Thank you for using Decision Maker. I hope you've got the answer you wanted.")
                     exit_program = True
                     break
                 else:
@@ -216,37 +227,35 @@ class Decision:
             if exit_program:
                 break
 
-class User:
-    def __init__(self,username = None,passwords = None):
-        self.username = username
-        self.passwords = passwords
-        self.decision_folio = []
-
-    def verify_passwords(self):
-        input_passwords = input("Enter your password: ")
-        if input_passwords == self.passwords:
-            return True
+    def add_decision(self,decision_data):
+        self.decision_data = {
+            "title": self.title,
+            "options": self.options_data,
+            "optimal_option":self.optimal_option,
+            "future_tree":self.future_tree
+        }
+        if os.path.exists("decisions.json"):
+            with open("decisions.json", "r") as file:
+                try:
+                    current_data = json.load(file)
+                except json.JSONDecodeError:
+                    current_data = []
         else:
-            return False
+            current_data = []
 
-    def add_to_folio(self,decision_item):
-        if self.verify_passwords():
-            self.decision_folio.append(decision_item)
-        else:
-            print("Failed to verify passwords. Please try again.")
+        current_data.append(self.decision_data)
+        try:
+            with open("decisions.json", "w") as file:
+                json.dump(current_data, file, indent=4)
+        except FileNotFoundError:
+            print_on_warning("The folio file does not exist.")
+        except json.JSONDecodeError:
+            print_on_warning("There was an error accessing your folio.")
+        except Exception as e:
+            print_on_warning(f"An unexpected error occurred: {e}")
 
-    def view_folio(self):
-        if self.verify_passwords():
-            pass
-        else:
-            print("Failed to verify passwords. Please try again.")
+        print_on_successful("Your new decision has been added to the folio.")
+        print("But you can't view it now. The function of viewing folio is under construction.")
+        print_on_highlights("Meantime, thanks for using Decision Maker v1.0. I hope you've got the answer you wanted.")
 
-class Guest(User):
-    def __init__(self):
-        super().__init__(username=None, passwords=None)
-
-    def add_to_folio(self, decision_item):
-        print("Guests cannot add items to the folio.")
-
-    def view_folio(self):
-        print("Guests cannot view saved the decision folio.")
+    

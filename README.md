@@ -6,40 +6,57 @@ An app that facilitates and helps decision making.
 - input a decision that user need to make
 - input pros and cons
 - assign weights to pros and cons
-- calculate and display the scores for each options
-- filter and display high-scoring options
-- saves the decision and allows a revisit and changes
-- what-if simulator which generates a decision tree for different scenarios
+- calculate and display the optimal option
 - a random mode which selects a random option from the provided inputs
+- a decision tree which displays what you see in the future
 
-## Data Collection Workflow
-- name 
-- decision to make
-- options (2-4)
-- choose mode
-    | Logic Mode | Random Mode | Intuition Mode |
-    - Logic Mode
-        0. Blurb: Use your logic to sort out what's the best for you. Let's think of 1-3 pros and cons. 
-        1. For option[x], list pros (1-3)
-        2. Assign weights to individual pros
-        3. For option[x], list cons (1-3)
-        4. Assign weights to individual cons
-        5. Calculate the weights and print the result based on descending scores of weights
-        6. Feedback: Looks like option[a] is your top choice based on seriously reflecting on the pros and cons associated with it. And option[b] could be a plan B.
-        7. Try Random Mode or Inituition Mode
-    - Random Mode 
-        0. Blurb: Press "Start" to get your answer.
-        1. Feedback: This is what We choose for you: {random select from options}. Are you happy with the result? (Y/N)
-        - Y: Looks like the answer is within you already. Glad I can speak your mind.
-        - N: Looks like the answer is within you already. Why not follow your heart?
-        2. Try Logic Mode or Intuition Mode
-    - Intuition Mode
-        0. Blurb: Use your imagination to think about what if you have gone with respective options in your life.
-        1. What if you have chosen option[x]? How will your life be different?
-        2. Looking ahead, how will that change you in 2 years? 
-        3. How will that change you in 5 years? 
-        4. How will that change you in 10 years? 
-        5. At your deathbed, considering the option you chose at this point of your life, how will you feel?
-        6. Feedback: If you choose option[x], the following is what you will be experiencing. In 2 years - {input}. In 5 years - {input}. In 10 years - {input}. At deathbed - {input}. Hopefully that provides you an insight into what's the best for you. But at the end of the day, you are the one to decide what you want for yourself. Follow your heart!
-        7. Try Logic Mode or Random Mode
-- Back to decision
+## Introduction
+Decision Maker is a Python-based application that helps you make decisions by evaluating multiple options. It provides three different modes:
+- Logic Mode - Evaluate the pros and cons of options.
+- Random Mode - Select an option randomly.
+- Intuition Mode - Imagine future outcomes and visualize long-term results.
+The application allows you to input options, weigh the pros and cons, and even visualize potential future scenarios before making your decision.
+
+## System Requirements
+- Python 3.7 or higher
+- anytree for managing hierarchical structures (used for visualizing future scenarios)
+- termcolor for text color formatting in the terminal
+
+## Installing Dependencies
+Install Python: Download and install Python from python.org.
+Install Required Libraries:
+- pip install anytree
+- pip install termcolor
+
+## File Structure
+.
+├── blueprints.py            # Core logic for the Decision and Option classes
+├── font_colours.py          # Helper functions for terminal text color formatting
+├── main.py                  # Main script to run the Decision Maker
+├── requirements.txt         # To install the same packages in a new environment
+├── decisions.json           # To save your decision files, but the viewing function is under construction
+├── LICENSE.md               # Licenses info
+├── LICENSE.md               # Security documentation
+└── README.md                # This README file
+
+## Key Modes
+1. Logic Mode
+In this mode, you evaluate your options based on the pros and cons. You assign a weight to each pro and con (on a scale of 1-10), and the application calculates the total score for each option. The option with the highest score is considered the optimal choice.
+2. Random Mode
+If you are uncertain, this mode randomly selects one of the options for you. It's a quick, fun way to make decisions when you're not sure what to choose.
+3. Intuition Mode
+In this mode, you imagine the long-term consequences of each option. You envision what the future might look like in 2, 5, and 10 years with each choice. This helps you visualize the impact of your decision.
+
+## How To Use
+1. Open a terminal window.
+2. Navigate to the folder where you have saved the Decision Maker files.
+3. Run the following command: python main.py
+
+## Troubleshooting
+- Error: "Please enter a valid number"
+Cause: You entered a value that isn’t a valid number (e.g., a string).
+Solution: Ensure that you enter a valid number between 1-10 when assigning weights to pros and cons.
+- Error: "Sorry, I didn't get you"
+Cause: The program didn’t understand your input (e.g., an empty string).
+Solution: Follow the exact instructions given by the program, ensuring you provide input in the expected format.
+
